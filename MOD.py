@@ -3,7 +3,7 @@ import json
 from pyModbusTCP.client import ModbusClient
 
 
-client = ModbusClient(host="192.168.1.1", port=502)
+client = ModbusClient(host="192.168.1.3", port=502)
 addresses = [(0, 1), (2, 0), (3, 1), (5, 0), (6, 0), (7, 0), (8, 1)]
 
 
@@ -35,7 +35,6 @@ while True:
         result = read_data(addr, data_type)
         if result:
             output_data.append({
-                "type": "double" if data_type == 1 else "holding",
                 "address": addr,
                 "timestamp": int(time.time()),
                 "data": result
@@ -45,4 +44,4 @@ while True:
         json_output = json.dumps(data_point)
         print(json_output)
 
-    time.sleep(2)
+    time.sleep(5)
