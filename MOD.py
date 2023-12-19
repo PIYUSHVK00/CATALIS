@@ -2,51 +2,47 @@ import time
 import json
 from pyModbusTCP.client import ModbusClient
 
-client = ModbusClient(host="192.168.1.3", port=502)
-value_address = 0  
-holding_addresses = [2, 3, 4, 5, 6]
-num_registers = 1
 
-while True:
-    if client.open():
-        counter, overflow = client.read_holding_registers(value_address, 2)
+client = ModbusClient(host="192.168.1.1", port=502)
+addresses = [(0, 1), (2, 0), (3, 1), (5, 0), (6, 0), (7, 0), (8, 1)]
 
-        if counter and overflow:  
-            actual_value = (overflow * 65535) + counter
 
-            output_data = {
-                "type": "actual_value",
+def read_data(address, data_type):
+    if data_type == 1:  
+        data = client.read_holding_registers(address, 2)
+        if data:
+            counter, overflow = data
+            double = (overflow * 65536) + counter
+            return double
+    elif data_type == 0:  
+        data = client.read_holding_registers(address, 1)
+        if data:
+            return data[0]
+    return None
+
+
+connected = client.open()
+
+while True:    
+    if not connected:
+        print("CHECK LAN")
+        connected = client.open()
+        time.sleep(2)
+        continue
+
+    output_data = []
+    for addr, data_type in addresses:
+        result = read_data(addr, data_type)
+        if result:
+            output_data.append({
+                "type": "double" if data_type == 1 else "holding",
+                "address": addr,
                 "timestamp": int(time.time()),
-                "data": actual_value
-            }
+                "data": result
+            })
 
-            json_output = json.dumps(output_data)
-            print(json_output)
-
-        for address in holding_addresses:
-            data_holding = client.read_holding_registers(address, num_registers)
-
-            if data_holding:
-                output_data = {
-                    "type": "holding",
-                    "address": address,
-                    "timestamp": int(time.time()),  
-                    "data": data_holding[0] if len(data_holding) == 1 else data_holding
-                }
-
-                json_output = json.dumps(output_data)
-                print(json_output)
-    else:
-        print("Connection ERROR")
+    for data_point in output_data:
+        json_output = json.dumps(data_point)
+        print(json_output)
 
     time.sleep(2)
-
-
-# =============================================================================
-# 
-# {
-#     "address": 4001,
-#     "timestamp": "182937401",
-#     "error_code": 1
-# }
-# =============================================================================
