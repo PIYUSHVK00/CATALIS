@@ -36,16 +36,19 @@ while True:
     # Go through addresses and read data
     for addr, data_type in addresses:
         result = read_data(addr, data_type)
-        if result:
+        if result is not None:
             output_data.append({
                 "address": addr,
                 "timestamp": int(time.time()),
                 "data": result
             })
 
-    # Print collected data as JSON
-    for data_point in output_data:
-        json_output = json.dumps(data_point)
-        print(json_output)
+    if output_data:
+        for data in output_data:
+            print(f"{data['address']} {data['timestamp']}  {data['data']}")
+    else:
+        print("No data retrieved Check Lan")  # Indicate when no data is retrieved
+        
+    print()
 
     time.sleep(5)  # Wait for 5 seconds before fetching data again
