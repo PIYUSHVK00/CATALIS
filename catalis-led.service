@@ -1,0 +1,9 @@
+[Unit]
+Description=Control LEDs 
+
+[Service]
+Type=simple
+ExecStart=/root/new.sh
+
+[Install]
+WantedBy=multi-user.target
