@@ -4,7 +4,7 @@ from pyModbusTCP.client import ModbusClient
 
 # Establishing Modbus client and loading addresses from a JSON file
 client = ModbusClient(host="192.168.1.3", port=502)
-f = open('addresses.json')
+f = open('./main/addresses.json')
 addresses = json.load(f)["addresses"]
 
 # Function to read data based on the address and data type
