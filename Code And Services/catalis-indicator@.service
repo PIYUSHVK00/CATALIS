@@ -3,7 +3,7 @@ Description=Control LEDs
 
 [Service]
 Type=simple
-ExecStart=/root/new.sh
+ExecStart=##
 
 [Install]
 WantedBy=multi-user.target
