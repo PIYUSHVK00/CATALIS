@@ -9,7 +9,7 @@ This Python script retrieves data from a Modbus server using the pyModbusTCP lib
 
 ## Usage
 
-1. Clone the repository or download the `modbus_data_retrieval.py` script.
+1. Clone the repository or download the `MOD.py` script.
 2. Ensure Python 3.x is installed on your system.
 3. Install the required dependencies using `pip install -r requirements.txt`.
 4. Update the `addresses.json` file with your Modbus addresses and their corresponding data types.
